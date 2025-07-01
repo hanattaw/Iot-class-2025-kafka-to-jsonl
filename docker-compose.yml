@@ -1,0 +1,8 @@
+services:
+  kafka-to-jsonl:
+    build:
+      context: ./app
+    env_file:
+      - .env
+    volumes:
+      - ./app:/app
