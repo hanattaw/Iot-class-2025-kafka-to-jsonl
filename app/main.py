@@ -21,7 +21,7 @@ logging.basicConfig(
 
 # Config
 KAFKA_BROKER = os.getenv("KAFKA_BROKER", "localhost:9092")
-KAFKA_OUTPUT_MODEL_TOPIC = os.getenv("KAFKA_OUTPUT_MODEL_TOPIC", "iot-frames-model")
+KAFKA_INPUT_TOPIC = os.getenv("KAFKA_INPUT_TOPIC", "iot-frames-model")
 SAVE_PATH = os.path.dirname(os.path.abspath(__file__)) + "/stream_sensor_data.jsonl"
 
 app = Application(broker_address=KAFKA_BROKER,
@@ -30,7 +30,7 @@ app = Application(broker_address=KAFKA_BROKER,
                 state_dir=os.path.dirname(os.path.abspath(__file__))+"/state/",
                 consumer_group="stream_kafka_to_file"
       )
-input_topic = app.topic(KAFKA_OUTPUT_MODEL_TOPIC, value_deserializer="json")
+input_topic = app.topic(KAFKA_INPUT_TOPIC, value_deserializer="json")
 
 # ✅ เขียน message ลงไฟล์แบบ JSON lines
 def handle_message(row):
@@ -46,5 +46,5 @@ sdf = app.dataframe(input_topic)
 sdf = sdf.apply(handle_message)
 
 logging.info(f"Connecting to ...{KAFKA_BROKER}")
-logging.info(f"🚀 Listening to Kafka topic: {KAFKA_OUTPUT_MODEL_TOPIC}")
+logging.info(f"🚀 Listening to Kafka topic: {KAFKA_INPUT_TOPIC}")
 app.run(sdf)
